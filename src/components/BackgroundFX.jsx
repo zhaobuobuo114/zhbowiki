@@ -126,13 +126,16 @@ function GridBlocksLayer() {
 /* ---------- 隐藏元素层：官方纹理 + 头像 ---------- */
 const ICON_WAVE_AMPLITUDE = 22 // 图标随波起伏的振幅
 
-/* 隐藏元素基础数据（left/top 由随机布局生成） */
+/* 隐藏元素基础数据（left/top 由随机布局生成）
+   BASE_URL 兼容本地根路径部署与 GitHub Pages 子路径部署 */
+const ASSET = (name) => `${import.meta.env.BASE_URL}assets/${name}`
+
 const BASE_ITEMS = [
-  { key: 'portrait', src: '/assets/portrait.jpg', size: 190, rotate: -8 },
-  { key: 'creeper', src: '/assets/mc-creeper.png', size: 150, rotate: 10 },
-  { key: 'grass', src: '/assets/mc-grass.png', size: 130, rotate: -6 },
-  { key: 'diamond', src: '/assets/mc-diamond.png', size: 110, rotate: 12 },
-  { key: 'tnt', src: '/assets/mc-tnt.png', size: 120, rotate: -10 }
+  { key: 'portrait', src: ASSET('portrait.jpg'), size: 190, rotate: -8 },
+  { key: 'creeper', src: ASSET('mc-creeper.png'), size: 150, rotate: 10 },
+  { key: 'grass', src: ASSET('mc-grass.png'), size: 130, rotate: -6 },
+  { key: 'diamond', src: ASSET('mc-diamond.png'), size: 110, rotate: 12 },
+  { key: 'tnt', src: ASSET('mc-tnt.png'), size: 120, rotate: -10 }
 ]
 
 /* 每次启动随机生成位置：避开中央标题区 + 右上按钮区，图标间不重叠 */
