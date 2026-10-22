@@ -4,21 +4,9 @@ import Logo from '../components/Logo.jsx'
 import { LangSwitch, ContactPill } from '../components/Controls.jsx'
 import { useApp } from '../store.jsx'
 import { useGlassHover } from '../hooks/useGlassHover.js'
+import { SWITCH_ANIM, SWITCH_EXIT } from '../lib/switchAnim.js'
 
 const TITLE = 'ZHBOWiki'.split('')
-
-/* 文字切换动画参数：模糊 + 轻微位移，先出后进 */
-const SWITCH_ANIM = {
-  initial: { opacity: 0, y: 4, filter: 'blur(8px)' },
-  animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
-  exit: { opacity: 0, y: -4, filter: 'blur(8px)' }
-}
-
-/* 退场单独设定时长：避免继承入场的首次延迟（否则切换会多等半秒） */
-const SWITCH_EXIT = {
-  ...SWITCH_ANIM.exit,
-  transition: { duration: 0.17, ease: 'easeOut', delay: 0 }
-}
 
 /* 按钮补位的弹簧参数：按真实时间积分，任何刷新率下都是约 0.5s、约 3% 过冲 */
 const SHIFT_SPRING_K = 46

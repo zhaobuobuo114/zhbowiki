@@ -1,7 +1,9 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Mail } from 'lucide-react'
 import { useApp } from '../store.jsx'
 import { useGlassHover } from '../hooks/useGlassHover.js'
+import { SWITCH_ANIM, SWITCH_EXIT } from '../lib/switchAnim.js'
 
 const LANGS = [
   { id: 'zh', label: '中文' },
@@ -9,22 +11,58 @@ const LANGS = [
 ]
 
 /* 联系我们胶囊：与语言胶囊同一套玻璃质感与交互（不位移，只跟随高光 + hover 果冻）
+   文案切换复用副标题的模糊淡入动画，胶囊宽度同步平滑伸缩
    目前为占位按钮，后续接联系入口（邮件 / 面板）时加 onClick 即可 */
 export function ContactPill() {
-  const { t } = useApp()
+  const { t, lang, staticMode } = useApp()
   const { wrapRef, pillRef } = useGlassHover(0)
+  const mirrorRef = useRef(null)
+  const [pillW, setPillW] = useState(null)
+
+  // 用隐藏镜像量出当前文案的自然宽度，驱动胶囊宽度平滑过渡
+  useLayoutEffect(() => {
+    const mirror = mirrorRef.current
+    const pill = pillRef.current
+    if (!mirror || !pill) return
+    const cs = getComputedStyle(pill)
+    const pad =
+      (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0)
+    const border =
+      (parseFloat(cs.borderLeftWidth) || 0) + (parseFloat(cs.borderRightWidth) || 0)
+    setPillW(Math.round(mirror.offsetWidth + pad + border))
+  }, [lang, pillRef])
 
   return (
     <div ref={wrapRef} className="pointer-events-none">
-      <button
+      <motion.button
         ref={pillRef}
         type="button"
-        className="glass-pill lang-pill contact-pill pointer-events-auto"
+        className="glass-pill lang-pill contact-pill pointer-events-auto relative"
         aria-label={t('nav.contact')}
+        animate={{ width: pillW ?? 'auto' }}
+        transition={{ width: { duration: 0.35, ease: [0.34, 1.56, 0.64, 1] } }}
       >
+        {/* 隐藏镜像：与真实内容同结构同样式，只用来量宽度 */}
+        <div ref={mirrorRef} className="contact-mirror" aria-hidden="true">
+          <Mail size={12} strokeWidth={1.9} />
+          <span>{t('nav.contact')}</span>
+        </div>
+
         <Mail size={12} strokeWidth={1.9} aria-hidden="true" />
-        <span>{t('nav.contact')}</span>
-      </button>
+
+        {/* 与副标题完全一致：模糊淡出 → 模糊淡入，先出后进 */}
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={lang}
+            {...SWITCH_ANIM}
+            initial={staticMode ? false : SWITCH_ANIM.initial}
+            exit={SWITCH_EXIT}
+            transition={{ duration: 0.17, ease: 'easeOut', delay: 0 }}
+          >
+            {t('nav.contact')}
+          </motion.span>
+        </AnimatePresence>
+      </motion.button>
     </div>
   )
 }

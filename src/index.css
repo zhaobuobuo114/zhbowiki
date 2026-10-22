@@ -426,6 +426,17 @@ html[data-static='1'] *::after {
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
+/* 隐藏镜像层：与真实内容同结构，仅用来测量当前文案的自然宽度 */
+.contact-mirror {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  visibility: hidden;
+  pointer-events: none;
+}
 
 /* 蓝色选中指示器：高斯模糊的柔光胶囊，滑动 + 果冻拉伸 */
 .lang-indicator {
