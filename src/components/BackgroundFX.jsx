@@ -131,12 +131,20 @@ const ICON_WAVE_AMPLITUDE = 22 // 图标随波起伏的振幅
 const ASSET = (name) => `${import.meta.env.BASE_URL}assets/${name}`
 
 const BASE_ITEMS = [
-  { key: 'portrait', src: ASSET('portrait.jpg'), size: 190, rotate: -8 },
   { key: 'creeper', src: ASSET('mc-creeper.png'), size: 150, rotate: 10 },
   { key: 'grass', src: ASSET('mc-grass.png'), size: 130, rotate: -6 },
   { key: 'diamond', src: ASSET('mc-diamond.png'), size: 110, rotate: 12 },
-  { key: 'tnt', src: ASSET('mc-tnt.png'), size: 120, rotate: -10 }
+  { key: 'tnt', src: ASSET('mc-tnt.png'), size: 120, rotate: -10 },
+  /* 钻石镐是斜向贯穿整格的素材，边缘渐隐半径放大一点，避免镐头/镐柄两端被抹掉 */
+  { key: 'pickaxe', src: ASSET('mc-pickaxe.png'), size: 150, rotate: -14, mask: 1.42 },
+  { key: 'anvil', src: ASSET('mc-anvil.png'), size: 130, rotate: 8, mask: 1.06 }
 ]
+
+/* 边缘渐隐 mask（k 为半径倍数，默认 1 与其他元素完全一致） */
+const edgeMask = (k = 1) =>
+  `radial-gradient(circle closest-side at 50% 50%, #000 ${40 * k}%, rgba(0,0,0,0.6) ${
+    68 * k
+  }%, rgba(0,0,0,0.2) ${88 * k}%, transparent ${100 * k}%)`
 
 /* 每次启动随机生成位置：避开中央标题区 + 右上按钮区，图标间不重叠 */
 function randomLayout() {
@@ -205,22 +213,15 @@ function HiddenLayer({ items }) {
                 <div
                   className="h-full w-full"
                   style={{
-                    WebkitMaskImage:
-                      'radial-gradient(circle closest-side at 50% 50%, #000 40%, rgba(0,0,0,0.6) 68%, rgba(0,0,0,0.2) 88%, transparent 100%)',
-                    maskImage:
-                      'radial-gradient(circle closest-side at 50% 50%, #000 40%, rgba(0,0,0,0.6) 68%, rgba(0,0,0,0.2) 88%, transparent 100%)'
+                    WebkitMaskImage: edgeMask(item.mask),
+                    maskImage: edgeMask(item.mask)
                   }}
                 >
                   <img
                     src={item.src}
                     alt=""
-                    data-portrait={item.key === 'portrait' ? '1' : '0'}
                     className="hidden-item h-full w-full object-cover"
-                    style={
-                      item.key === 'portrait'
-                        ? undefined
-                        : { imageRendering: 'pixelated' }
-                    }
+                    style={{ imageRendering: 'pixelated' }}
                   />
                 </div>
               </div>
@@ -326,8 +327,7 @@ function useIconInteractions(ref, light) {
           u: diag(rect.left, rect.top),
           r: rect.width / 2 + 12, // 判定半径 = 图标半径 + 12px 余量
           hover: 0,
-          waveReveal: 0, // 波浪显现强度（含 0.8s 衰减）
-          isPortrait: img.dataset.portrait === '1'
+          waveReveal: 0 // 波浪显现强度（含 0.8s 衰减）
         }
       })
     }
@@ -404,15 +404,13 @@ function useIconInteractions(ref, light) {
           it.jump.style.transform = 'translate(0px, 0px) scale(1)'
         }
 
-        // 提亮：hover 或波浪浮出都随强度提升图片本身亮度（头像不提亮）
-        if (!it.isPortrait) {
-          if (intensity > 0.01) {
-            const b = (0.38 + intensity * 0.32).toFixed(2)
-            const s = (0.7 + intensity * 0.2).toFixed(2)
-            it.img.style.filter = `brightness(${b}) saturate(${s})`
-          } else {
-            it.img.style.filter = ''
-          }
+        // 提亮：hover 或波浪浮出都随强度提升图片本身亮度
+        if (intensity > 0.01) {
+          const b = (0.38 + intensity * 0.32).toFixed(2)
+          const s = (0.7 + intensity * 0.2).toFixed(2)
+          it.img.style.filter = `brightness(${b}) saturate(${s})`
+        } else {
+          it.img.style.filter = ''
         }
 
         // 荧光 = 随强度变化（双层光晕，内亮外柔）
