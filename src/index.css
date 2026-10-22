@@ -405,6 +405,28 @@ html[data-static='1'] *::after {
   cursor: default;
 }
 
+/* 联系我们胶囊：复用 .lang-pill 的内边距，保证与语言胶囊同高 */
+.contact-pill {
+  cursor: pointer;
+  color: var(--c-muted);
+  transition: color 0.3s ease;
+}
+.contact-pill:hover {
+  color: var(--c-text);
+}
+.contact-pill svg {
+  flex: none;
+  margin-left: 8px;
+  margin-right: 2px;
+}
+.contact-pill span {
+  padding: 4px 12px 4px 2px;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
 /* 蓝色选中指示器：高斯模糊的柔光胶囊，滑动 + 果冻拉伸 */
 .lang-indicator {
   position: absolute;

@@ -5,6 +5,7 @@ export const dict = {
       sub: 'Minecraft 服务端插件文档站。用心做好每一个插件，每一次服务。',
       cta: '开始探索'
     },
+    nav: { contact: '联系我们' },
     theme: { dark: '暗色', light: '亮色' }
   },
   en: {
@@ -13,6 +14,7 @@ export const dict = {
       sub: 'Documentation for Minecraft server plugins. Every plugin, every service — done with care.',
       cta: 'Get Started'
     },
+    nav: { contact: 'Contact' },
     theme: { dark: 'Dark', light: 'Light' }
   }
 }

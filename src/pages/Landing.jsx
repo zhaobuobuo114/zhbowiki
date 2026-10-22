@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Logo from '../components/Logo.jsx'
-import { LangSwitch } from '../components/Controls.jsx'
+import { LangSwitch, ContactPill } from '../components/Controls.jsx'
 import { useApp } from '../store.jsx'
 import { useGlassHover } from '../hooks/useGlassHover.js'
 
@@ -223,6 +223,7 @@ export default function Landing() {
           </span>
         </div>
         <div className="flex items-center gap-2">
+          <ContactPill />
           <LangSwitch />
         </div>
       </motion.header>

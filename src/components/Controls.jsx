@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
+import { Mail } from 'lucide-react'
 import { useApp } from '../store.jsx'
 import { useGlassHover } from '../hooks/useGlassHover.js'
 
@@ -6,6 +7,27 @@ const LANGS = [
   { id: 'zh', label: '中文' },
   { id: 'en', label: 'EN' }
 ]
+
+/* 联系我们胶囊：与语言胶囊同一套玻璃质感与交互（不位移，只跟随高光 + hover 果冻）
+   目前为占位按钮，后续接联系入口（邮件 / 面板）时加 onClick 即可 */
+export function ContactPill() {
+  const { t } = useApp()
+  const { wrapRef, pillRef } = useGlassHover(0)
+
+  return (
+    <div ref={wrapRef} className="pointer-events-none">
+      <button
+        ref={pillRef}
+        type="button"
+        className="glass-pill lang-pill contact-pill pointer-events-auto"
+        aria-label={t('nav.contact')}
+      >
+        <Mail size={12} strokeWidth={1.9} aria-hidden="true" />
+        <span>{t('nav.contact')}</span>
+      </button>
+    </div>
+  )
+}
 
 export function LangSwitch() {
   const { lang, setLang } = useApp()
