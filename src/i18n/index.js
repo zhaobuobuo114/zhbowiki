@@ -40,6 +40,12 @@ export const dict = {
       command: '指令',
       description: '说明',
       permission: '权限'
+    },
+    notFound: {
+      title: '页面不存在',
+      hint: '这个地址可能已经失效，或者链接有误。',
+      home: '回到首页',
+      plugins: '去插件仓库'
     }
   },
   en: {
@@ -83,6 +89,12 @@ export const dict = {
       command: 'Command',
       description: 'Description',
       permission: 'Permission'
+    },
+    notFound: {
+      title: 'Page not found',
+      hint: 'This address may be outdated, or the link is wrong.',
+      home: 'Back home',
+      plugins: 'Open the library'
     }
   }
 }

@@ -1621,6 +1621,58 @@ html[data-static='1'] .grid-blocks {
   border-radius: 16px;
 }
 
+/* ---------- 404 ---------- */
+.notfound-main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.notfound-card {
+  width: min(520px, 100%);
+  padding: 48px 32px;
+  border-radius: 18px;
+  text-align: center;
+  background: rgba(15, 21, 30, 0.86);
+}
+
+.notfound-code {
+  margin: 0;
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: var(--c-cyan);
+  text-shadow: 0 0 40px rgba(34, 211, 238, 0.25);
+}
+
+.notfound-title {
+  margin: 18px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.notfound-hint {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--c-muted);
+}
+
+.notfound-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
 @media (min-width: 768px) {
   .repo-main,
   .detail-main {

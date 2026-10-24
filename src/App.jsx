@@ -5,6 +5,7 @@ import BackgroundFX from './components/BackgroundFX.jsx'
 import Landing from './pages/Landing.jsx'
 import Plugins from './pages/Plugins.jsx'
 import PluginDetail from './pages/PluginDetail.jsx'
+import NotFound from './pages/NotFound.jsx'
 import { useApp } from './store.jsx'
 
 export default function App() {
@@ -25,7 +26,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/plugins" element={<Plugins />} />
         <Route path="/plugins/:slug" element={<PluginDetail />} />
-        <Route path="*" element={<Landing />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       {showSplash && <Splash onDone={finishSplash} />}
     </>

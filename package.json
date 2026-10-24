@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:pages": "vite build --base=/zhbowiki/ --outDir=docs",
+    "build:pages": "vite build --base=/zhbowiki/ --outDir=docs && node scripts/gen-pages.mjs docs",
+    "build:site": "vite build --base=/ --outDir=dist-site && node scripts/gen-pages.mjs dist-site",
+    "deploy:site": "node scripts/deploy-site.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
