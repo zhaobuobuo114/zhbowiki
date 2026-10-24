@@ -252,9 +252,15 @@ function useMouseLight(ref, light) {
     let targetY = ty
     let speed = 0
     let lastMove = performance.now()
+    let flashUntil = 0
+    let tapStart = null
     let raf = 0
 
+    const isStatic = () =>
+      document.documentElement.getAttribute('data-static') === '1'
+
     const onMove = (e) => {
+      if (isStatic()) return
       const now = performance.now()
       const dt = Math.max(1, now - lastMove)
       const dx = e.clientX - targetX
@@ -265,6 +271,49 @@ function useMouseLight(ref, light) {
       lastMove = now
     }
 
+    /* 触摸/触控笔点按：光斑直接落到点按位置并保持一小段时间 */
+    const flashAt = (x, y) => {
+      const now = performance.now()
+      targetX = x
+      targetY = y
+      tx = x
+      ty = y
+      light.current.x = x
+      light.current.y = y
+      light.current.a = 1
+      speed = 0
+      lastMove = now
+      flashUntil = now + 900
+      el.style.setProperty('--lx', `${x}px`)
+      el.style.setProperty('--ly', `${y}px`)
+      el.style.setProperty('--light-a', '1')
+    }
+
+    const isTapPointer = (e) =>
+      e.pointerType === 'touch' || e.pointerType === 'pen'
+
+    const onPointerDown = (e) => {
+      if (!e.isPrimary || !isTapPointer(e) || isStatic()) return
+      tapStart = {
+        id: e.pointerId,
+        x: e.clientX,
+        y: e.clientY,
+        t: performance.now()
+      }
+    }
+
+    const onPointerUp = (e) => {
+      const start = tapStart
+      tapStart = null
+      if (!start || e.pointerId !== start.id || !isTapPointer(e) || isStatic()) return
+      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > 10) return
+      if (performance.now() - start.t > 600) return
+      if (document.querySelector('.splash-shell, .splash-static')) return
+      const target = e.target instanceof Element ? e.target : null
+      if (target?.closest('button, a, input, textarea, select, [role="button"]')) return
+      flashAt(e.clientX, e.clientY)
+    }
+
     const tick = (now) => {
       // 位置柔和缓动
       tx += (targetX - tx) * 0.14
@@ -273,7 +322,8 @@ function useMouseLight(ref, light) {
       // 静止 0.6s 后速度衰减
       const idle = now - lastMove
       if (idle > 600) speed *= 0.9
-      const targetA = Math.min(1, speed / LIGHT_FULL_SPEED)
+      const flash = now < flashUntil ? 1 : 0
+      const targetA = Math.max(Math.min(1, speed / LIGHT_FULL_SPEED), flash)
       // 显现快、消失慢
       const k = targetA > light.current.a ? 0.12 : 0.05
       light.current.a += (targetA - light.current.a) * k
@@ -287,12 +337,22 @@ function useMouseLight(ref, light) {
 
       raf = requestAnimationFrame(tick)
     }
+    const onPointerCancel = () => {
+      tapStart = null
+    }
+
     raf = requestAnimationFrame(tick)
 
     window.addEventListener('mousemove', onMove, { passive: true })
+    window.addEventListener('pointerdown', onPointerDown, { passive: true })
+    window.addEventListener('pointerup', onPointerUp, { passive: true })
+    window.addEventListener('pointercancel', onPointerCancel, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerCancel)
     }
   }, [ref, light])
 }

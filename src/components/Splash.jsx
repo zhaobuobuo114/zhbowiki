@@ -75,7 +75,7 @@ export default function Splash({ onDone }) {
 
       {/* 标题精确垂直居中（与首页标题位置逐像素一致） */}
       <h1
-        className="relative z-10 flex flex-wrap items-baseline justify-center px-6 font-display text-[clamp(46px,9.5vw,104px)] font-black leading-none tracking-[0.04em] text-white"
+        className="hero-title relative z-10 flex flex-wrap items-baseline justify-center px-6 font-display font-black leading-none tracking-[0.04em] text-white"
         style={{ transform: 'translateY(var(--title-shift))' }}
       >
         {TITLE.map((char, i) => (
@@ -102,7 +102,7 @@ export default function Splash({ onDone }) {
         style={{
           top: '50%',
           marginTop:
-            'calc(clamp(46px, 9.5vw, 104px) / 2 + 28px + var(--title-shift))'
+            'calc(var(--title-size) / 2 + var(--hero-gap) + var(--title-shift))'
         }}
       >
         <div className="splash-slogan text-center">
@@ -115,7 +115,7 @@ export default function Splash({ onDone }) {
         </div>
 
         <div
-          className="splash-line mt-9 h-px w-[240px] md:w-[320px]"
+          className="splash-line h-px w-[240px] md:w-[320px]"
           style={{
             background:
               'linear-gradient(90deg, transparent, #00f0ff 50%, transparent)',

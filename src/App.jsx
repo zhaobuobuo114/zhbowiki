@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom'
 import Splash from './components/Splash.jsx'
 import BackgroundFX from './components/BackgroundFX.jsx'
 import Landing from './pages/Landing.jsx'
+import Plugins from './pages/Plugins.jsx'
+import PluginDetail from './pages/PluginDetail.jsx'
 import { useApp } from './store.jsx'
 
 export default function App() {
@@ -20,6 +22,9 @@ export default function App() {
     <>
       <BackgroundFX />
       <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/plugins" element={<Plugins />} />
+        <Route path="/plugins/:slug" element={<PluginDetail />} />
         <Route path="*" element={<Landing />} />
       </Routes>
       {showSplash && <Splash onDone={finishSplash} />}

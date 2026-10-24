@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import Logo from '../components/Logo.jsx'
-import { LangSwitch, ContactPill } from '../components/Controls.jsx'
+import { useNavigate } from 'react-router-dom'
+import SiteHeader from '../components/SiteHeader.jsx'
 import { useApp } from '../store.jsx'
 import { useGlassHover } from '../hooks/useGlassHover.js'
 import { SWITCH_ANIM, SWITCH_EXIT } from '../lib/switchAnim.js'
@@ -26,6 +26,7 @@ function ShiftProbe({ onMount }) {
 /* 胶囊 CTA 按钮：iOS 毛玻璃 + 果冻弹性 + 吸附感 + 边缘高光跟随鼠标 */
 function CtaButton({ staticMode, shiftApi }) {
   const { t, lang } = useApp()
+  const navigate = useNavigate()
   const { wrapRef, pillRef } = useGlassHover(5)
   const measureRef = useRef(null)
   const firstRef = useRef(true)
@@ -141,11 +142,12 @@ function CtaButton({ staticMode, shiftApi }) {
   }, [lang, pillRef])
 
   return (
-    <div ref={shiftRef} className="mt-8">
+    <div ref={shiftRef} className="hero-cta">
       <div ref={wrapRef} className="pointer-events-none">
         <motion.button
         ref={pillRef}
         type="button"
+        onClick={() => navigate('/plugins')}
         className="glass-pill cta-btn pointer-events-auto relative"
         initial={staticMode ? false : { opacity: 0 }}
         animate={{ opacity: 1, width: btnW ?? 'auto' }}
@@ -197,29 +199,12 @@ export default function Landing() {
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <motion.header
-        className="flex items-center justify-between px-6 py-5 md:px-10"
-        initial={staticMode ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.35 }}
-      >
-        <div className="flex items-center gap-3">
-          <Logo size={32} />
-          <span className="text-sm font-medium tracking-wide">
-            <span style={{ color: 'var(--c-text)' }}>ZHBO</span>
-            <span style={{ color: 'var(--c-cyan)' }}>Wiki</span>
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <ContactPill />
-          <LangSwitch />
-        </div>
-      </motion.header>
+      <SiteHeader delay={0.35} />
 
       {/* 标题区：大标题精确垂直居中，与开场动画标题逐像素一致 */}
       <div className="pointer-events-none fixed inset-0 z-[1] flex items-center justify-center">
         <h1
-          className="flex flex-wrap items-baseline justify-center px-6 font-display text-[clamp(46px,9.5vw,104px)] font-black leading-none tracking-[0.04em]"
+          className="hero-title flex flex-wrap items-baseline justify-center px-6 font-display font-black leading-none tracking-[0.04em]"
           style={{ transform: 'translateY(var(--title-shift))' }}
         >
           {TITLE.map((char, i) => (
@@ -241,13 +226,13 @@ export default function Landing() {
           style={{
             top: '50%',
             marginTop:
-              'calc(clamp(46px, 9.5vw, 104px) / 2 + 28px + var(--title-shift))'
+              'calc(var(--title-size) / 2 + var(--hero-gap) + var(--title-shift))'
           }}
         >
           <AnimatePresence mode="wait">
             <motion.p
               key={lang}
-              className="max-w-md text-center text-sm leading-relaxed"
+              className="hero-sub max-w-md text-center text-sm leading-relaxed"
               style={{ color: 'var(--c-muted)' }}
               {...SWITCH_ANIM}
               exit={SWITCH_EXIT}
@@ -272,7 +257,7 @@ export default function Landing() {
       <main className="flex-1" />
 
       <motion.footer
-        className="px-6 py-6 text-center text-[11px] tracking-wide"
+        className="site-footer text-center text-[11px] tracking-wide"
         style={{ color: 'var(--c-muted)' }}
         initial={staticMode ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
