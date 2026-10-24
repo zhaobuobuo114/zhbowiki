@@ -372,8 +372,7 @@ html[data-static='1'] *::after {
     circle var(--light-r) at var(--lx) var(--ly),
     rgba(34, 211, 238, 0.22) 0%,
     rgba(34, 211, 238, 0.09) 45%,
-    rgba(10, 14, 20, 0) 72%,
-    rgba(10, 14, 20, 0.30) 100%
+    rgba(34, 211, 238, 0) 72%
   );
   opacity: var(--light-a, 0);
 }
